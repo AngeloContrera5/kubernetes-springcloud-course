@@ -1,7 +1,9 @@
 package com.acontreras.springcloud.msvc.courses.controllers;
 
+import com.acontreras.springcloud.msvc.courses.models.User;
 import com.acontreras.springcloud.msvc.courses.models.entity.Course;
 import com.acontreras.springcloud.msvc.courses.services.CourseService;
+import feign.FeignException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,6 +44,56 @@ public class CourseController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(course));
     }
 
+    @PutMapping("/assignUser/{courseId}")
+    public ResponseEntity<?> assignUser(@RequestBody User user, @PathVariable Long courseId) {
+        Optional<User> o;
+
+        try {
+            o = service.assignUser(user, courseId);
+        } catch (FeignException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("message", "Not user found with ID " + user.getId() + " or error" +
+                    " communicating with the server : " + e.getMessage()));
+        }
+
+        if (o.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(o.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/createUser/{courseId}")
+    public ResponseEntity<?> createUser(@RequestBody User user, @PathVariable Long courseId) {
+        Optional<User> o;
+
+        try {
+            o = service.createUser(user, courseId);
+        } catch (FeignException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("message", "User could not be created or error" +
+                    " communicating with the server : " + e.getMessage()));
+        }
+
+        if (o.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(o.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/removeUser/{courseId}")
+    public ResponseEntity<?> removeUser(@RequestBody User user, @PathVariable Long courseId) {
+        Optional<User> o;
+
+        try {
+            o = service.removeUser(user, courseId);
+        } catch (FeignException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("message", "Not user found with ID " + user.getId() + " or error" +
+                    " communicating with the server : " + e.getMessage()));
+        }
+
+        if (o.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(o.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@Valid @RequestBody Course course, BindingResult result, @PathVariable Long id) {
