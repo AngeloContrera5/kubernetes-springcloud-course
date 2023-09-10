@@ -4,6 +4,7 @@ import com.acontreras.springcloud.msvc.users.models.User;
 import com.acontreras.springcloud.msvc.users.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -83,6 +84,13 @@ public class UserController {
         }
         return ResponseEntity.notFound().build();
     }
+
+
+    @GetMapping("/listUsersByIds")
+    public ResponseEntity<?> listUsersByIds(@RequestParam List<Long> ids) {
+        return ResponseEntity.ok(service.listUsersByIds(ids));
+    }
+
 
     private static ResponseEntity<Map<String, String>> validateObj(BindingResult result) {
         Map<String, String> errors = new HashMap<>();

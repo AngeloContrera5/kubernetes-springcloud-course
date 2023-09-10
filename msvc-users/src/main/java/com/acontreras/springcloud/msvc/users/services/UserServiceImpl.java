@@ -1,5 +1,6 @@
 package com.acontreras.springcloud.msvc.users.services;
 
+import com.acontreras.springcloud.msvc.users.clients.CourseClientRest;
 import com.acontreras.springcloud.msvc.users.models.User;
 import com.acontreras.springcloud.msvc.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private CourseClientRest client;
 
     @Override
     @Transactional(readOnly = true)
@@ -36,12 +40,19 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void delete(Long id) {
         repository.deleteById(id);
+        client.deleteCourseUserById(id);
 
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
         return repository.findByEmail(email);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<User> listUsersByIds(Iterable<Long> ids) {
+        return (List<User>) repository.findAllById(ids);
     }
 
 

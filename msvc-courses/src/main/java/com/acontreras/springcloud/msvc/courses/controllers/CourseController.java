@@ -28,7 +28,7 @@ public class CourseController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
-        Optional<Course> bean = service.getById(id);
+        Optional<Course> bean = service.getByIdWithUsers(id);
         if (bean.isPresent()) {
             return ResponseEntity.ok(bean.get());
         }
@@ -120,6 +120,12 @@ public class CourseController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/deleteCourseUserById/{id}")
+    public ResponseEntity<?> deleteCourseUserById(@PathVariable Long id) {
+        service.deleteCourseUserById(id);
+        return ResponseEntity.noContent().build();
     }
 
     private static ResponseEntity<Map<String, String>> validateObj(BindingResult result) {
