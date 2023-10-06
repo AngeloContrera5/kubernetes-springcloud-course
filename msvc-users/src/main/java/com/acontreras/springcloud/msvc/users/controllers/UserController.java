@@ -64,7 +64,7 @@ public class UserController {
             //we can use Collections.singletonMap lib to create a object map to return a msg
 
             if (!user.getEmail().isEmpty() && !user.getEmail().equalsIgnoreCase(userDB.getEmail()) && service.findByEmail(user.getEmail()).isPresent()) {
-                return ResponseEntity.badRequest().body(Collections.singletonMap("message", "That email already exists"));
+                return ResponseEntity.badRequest().body(Collections.singletonMap("message", "That email already exists."));
             }
             userDB.setName(user.getName());
             userDB.setEmail(user.getEmail());

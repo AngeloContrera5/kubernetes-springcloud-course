@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 //cuando se implemente spring cloud con kubernetes la propiedad url se quitará
-@FeignClient(name = "mscv-users", url = "localhost:8001")
+@FeignClient(name = "msvc-users", url = "${msvc.users.url}")
 public interface UserClientRest {
 
     @GetMapping("/{id}")
